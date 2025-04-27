@@ -1,145 +1,54 @@
 
-# Deployment Guide for Leaf Disease Detection System
+#  Potato Leaf Disease Detection
 
-This document provides step-by-step instructions to deploy the **Leaf Disease Detection System** on Google Cloud Platform (GCP).
+This project focuses on building an **end-to-end deep learning model** to detect diseases in potato leaves.  
+The purpose is educational — to practice model development, deployment preparation, and project structuring.
 
----
+##  Project Overview
+- **Problem**: Early detection of potato leaf diseases to help farmers and reduce crop loss.
+- **Approach**: Build a CNN (Convolutional Neural Network) based model to classify healthy and diseased leaves.
+- **Dataset**: A curated dataset containing images of **potato leaves** (extracted from a broader dataset including pepper, tomato, and potato leaves).
 
-## Prerequisites
-
-- A Google Cloud Platform (GCP) account
-- Google Cloud SDK installed locally
-- Docker installed
-- Billing enabled on GCP project
-- Basic understanding of Docker, GCP (Cloud Run / App Engine)
-
----
-
-## 1. Model Preparation
-
-Ensure your trained TensorFlow model is saved properly.
-
-Example:
-
-```python
-model.save('models/leaf_disease_model')
+##  Project Structure
+```
+LeafDisease/
+│
+├── datasets/           # Dataset folder (images of potato leaves)
+├── models/             # Saved trained models
+├── notebooks/          # Colab Notebooks
+├── src/                # Source code (training, preprocessing, etc.)
+├── README.md           # Project description
+└── requirements.txt    # Python libraries required
 ```
 
-If using TensorFlow Lite for mobile, export it as `.tflite` format.
+## 🛠️ Technologies Used
+- Python
+- TensorFlow / Keras
+- OpenCV
+- NumPy
+- Google Colab
+- Matplotlib
+- Scikit-learn
 
----
+## Model Workflow
+1. **Data Collection** — Gather images of potato leaves (healthy and infected).
+2. **Data Preprocessing** — Resize, normalize, and augment images.
+3. **Model Building** — Design a Convolutional Neural Network (CNN).
+4. **Training & Evaluation** — Train the model and evaluate its performance.
+5. **Saving the Model** — Save the trained model for deployment or further use.
 
-## 2. Dockerizing the Backend
+## Results
+- **Accuracy Achieved**: (to be updated after training)
+- **Loss**: (to be updated after training)
 
-Create a `Dockerfile` for TensorFlow Serving:
+##  Useful Links
+- **Google Colab Notebook**: [Open Colab](https://colab.research.google.com/drive/1YeEb6vqCUOw0Fn37sV_jCWi4zMNfDonj?usp=sharing)
+- **GitHub Repository**: [Visit GitHub](https://github.com/tofayela142/LeafDisease)
 
-```dockerfile
-FROM tensorflow/serving
+##  Future Work
+- Expand to detect diseases in pepper and tomato leaves.
+- Deploy the model as a web or mobile application.
+- Use Transfer Learning with models like MobileNet or EfficientNet for better accuracy.
 
-# Copy the exported model into the container
-COPY models/leaf_disease_model /models/leaf_disease_model
-
-ENV MODEL_NAME=leaf_disease_model
-```
-
-If you want to serve a **FastAPI** app (custom logic), you'll need a separate `Dockerfile` for FastAPI.
-
----
-
-## 3. Build and Push Docker Image
-
-Authenticate Docker to Google Container Registry:
-
-```bash
-gcloud auth configure-docker
-```
-
-Build the Docker image:
-
-```bash
-docker build -t gcr.io/YOUR_PROJECT_ID/leaf-disease-backend .
-```
-
-Push it to GCP:
-
-```bash
-docker push gcr.io/YOUR_PROJECT_ID/leaf-disease-backend
-```
-
----
-
-## 4. Deploy to Google Cloud Run
-
-Deploy the backend container:
-
-```bash
-gcloud run deploy leaf-disease-backend \
-  --image gcr.io/YOUR_PROJECT_ID/leaf-disease-backend \
-  --platform managed \
-  --region YOUR_REGION \
-  --allow-unauthenticated
-```
-
-GCP will generate a public URL for your API.
-
----
-
-## 5. Deploy Frontend (ReactJS)
-
-### Build the ReactJS app
-
-```bash
-cd frontend
-npm install
-npm run build
-```
-
-### Host Frontend
-
-Options:
-- **Firebase Hosting** (Recommended for React)
-- **GCP App Engine**
-- **GCP Storage Bucket (Static Hosting)**
-
-Example using Firebase:
-
-```bash
-npm install -g firebase-tools
-firebase login
-firebase init
-firebase deploy
-```
-
----
-
-## 6. Update API URL in Frontend
-
-After backend deployment, update your ReactJS frontend to point to the live backend URL.
-
-Example (`frontend/src/config.js`):
-
-```javascript
-export const API_BASE_URL = "https://your-cloud-run-url.a.run.app";
-```
-
-Rebuild your frontend after changing the API URL.
-
----
-
-## Project Deployment Flow
-
-```plaintext
-User → ReactJS Frontend → FastAPI Backend (Cloud Run) → TensorFlow Serving Model
-```
-
----
-
-## Important Notes
-
-- Use environment variables to manage different stages (development, production).
-- Monitor GCP resource usage to avoid unexpected charges.
-- Consider adding authentication for production deployments.
-
----
-
-
+##  Acknowledgements
+Special thanks to our respected teachers and the open-source community for dataset and inspiration.
